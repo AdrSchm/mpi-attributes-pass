@@ -14,23 +14,15 @@ int main(int argc, char **argv) {
     printf("%d %d\n", size, rank);
 
     if (rank == 0) {
-        //int *msg = get_ptr();
-        int *msg = (int *) malloc(sizeof(int));
-        *msg = get_int();
-        *msg = *msg * 100;
-        MPI_Send(msg, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
-        *msg = *msg * 11;
-        printf("%d\n", *msg);
-        free(msg);
+        int msg = get_int();
+        MPI_Send(&msg, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
+        printf("%d\n", msg);
     }
     else if (rank == 1) {
-        //int *buf = get_ptr();
-        int *buf = (int *) malloc(sizeof(int));
-        *buf = get_int();
+        int buf = get_int();
         MPI_Status stat;
-        *buf = *buf * 50;
-        MPI_Recv(buf, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &stat);
-        free(buf);
+        buf = buf * 50;
+        MPI_Recv(&buf, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &stat);
     }
     return 0;
 }
