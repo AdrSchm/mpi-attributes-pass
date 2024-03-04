@@ -1,61 +1,36 @@
 #include "MPIAttributesPass.hpp"
 
-#include "llvm/IR/Attributes.h"
+#include "MPIAnnotationFunctions.hpp"
+
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Pass.h"
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
-#include "llvm/Support/raw_ostream.h"
-
-#include <iostream>
-#include <string>
 
 /*
     Function that performs the actual work.
     It's separated so it can be called from both the legacy pass and the new pass.
 */
 bool runMPIAttributesPass(llvm::Module &M) {
-    // Use shorter names for needed attributes
-    const auto ReadOnly = llvm::Attribute::AttrKind::ReadOnly;
-    const auto WriteOnly = llvm::Attribute::AttrKind::WriteOnly;
-    const auto NoCapture = llvm::Attribute::AttrKind::NoCapture;
-
     // Test if we have MPI functions and add attributes accordingly
+    if (auto *func = M.getFunction("MPI_Init")) {
+        annotateMPIInitFinalize(func);
+    }
+    if (auto *func = M.getFunction("MPI_Finalize")) {
+        annotateMPIInitFinalize(func);
+    }
+    if (auto *func = M.getFunction("MPI_Comm_size")) {
+        annotateMPICommSizeRank(func);
+    }
+    if (auto *func = M.getFunction("MPI_Comm_rank")) {
+        annotateMPICommSizeRank(func);
+    }
     if (auto *func = M.getFunction("MPI_Send")) {
-        func->setOnlyAccessesInaccessibleMemOrArgMem();
-        func->setDoesNotFreeMemory();
-
-        // buffer
-        func->addParamAttr(0, ReadOnly);
-        func->addParamAttr(0, NoCapture);
-
-        // data type
-        func->addParamAttr(2, ReadOnly);
-        func->addParamAttr(2, NoCapture);
-
-        // communicator
-        func->addParamAttr(5, ReadOnly);
-        func->addParamAttr(5, NoCapture);
+        annotateMPISend(func);
     }
     if (auto *func = M.getFunction("MPI_Recv")) {
-        func->setOnlyAccessesInaccessibleMemOrArgMem();
-
-        // buffer
-        func->addParamAttr(0, WriteOnly);
-        func->addParamAttr(0, NoCapture);
-
-        // data type
-        func->addParamAttr(2, ReadOnly);
-        func->addParamAttr(2, NoCapture);
-
-        // communicator
-        func->addParamAttr(5, ReadOnly);
-        func->addParamAttr(5, NoCapture);
-
-        // status
-        func->addParamAttr(6, WriteOnly);
-        func->addParamAttr(6, NoCapture);
+        annotateMPIRecv(func);
     }
     // we potentially did modify the module
     return true;

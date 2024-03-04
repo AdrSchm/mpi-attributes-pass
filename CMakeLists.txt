@@ -16,7 +16,11 @@ list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
 include(AddLLVM)
 add_llvm_pass_plugin(MPIAttrs
   ./src/MPIAttributesPass.cpp
+  ./src/MPIAnnotationFunctions.cpp
 
   PLUGIN_TOOL
   opt
 )
+if (DEFINED "USE_OPENMPI")
+  add_compile_definitions(USE_OPENMPI)
+endif()

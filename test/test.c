@@ -3,7 +3,10 @@
 #include <stdlib.h>
 
 int *get_ptr();
+__attribute__((pure))
 int get_int();
+
+int factor = 50;
 
 int main(int argc, char **argv) {
     MPI_Init(&argc, &argv);
@@ -11,19 +14,21 @@ int main(int argc, char **argv) {
     int rank = 5;
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    printf("%d %d\n", size, rank);
+    //printf("%d %d\n", size, rank);
 
     if (rank == 0) {
         int msg = get_int();
+        msg = msg * factor;
         MPI_Send(&msg, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);
         printf("%d\n", msg);
     }
     else if (rank == 1) {
         int buf = get_int();
         MPI_Status stat;
-        buf = buf * 50;
+        buf = buf * factor;
         MPI_Recv(&buf, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &stat);
     }
+    MPI_Finalize();
     return 0;
 }
 
