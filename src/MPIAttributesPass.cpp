@@ -9,11 +9,13 @@
 #include "llvm/Passes/PassPlugin.h"
 
 /*
-    Function that performs the actual work.
-    It's separated so it can be called from both the legacy pass and the new pass.
+   Function that performs the actual work.
+   It's separated so it can be called from both the legacy pass and the new pass.
+   It works on the principle of testing whether each function exists and then adding attributes
+   accordingly
 */
 bool runMPIAttributesPass(llvm::Module &M) {
-    // Test if we have MPI functions and add attributes accordingly
+    // Setup and teardown operations
     if (auto *func = M.getFunction("MPI_Init")) {
         annotateMPIInitFinalize(func);
     }
@@ -26,12 +28,49 @@ bool runMPIAttributesPass(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Comm_rank")) {
         annotateMPICommSizeRank(func);
     }
+    if (auto *func = M.getFunction("MPI_Comm_attach_buffer")) {
+        annotateMPICommSessionAttachBuffer(func);
+    }
+    if (auto *func = M.getFunction("MPI_Session_attach_buffer")) {
+        annotateMPICommSessionAttachBuffer(func);
+    }
+    if (auto *func = M.getFunction("MPI_Buffer_attach")) {
+        annotateMPIBufferAttach(func);
+    }
+    if (auto *func = M.getFunction("MPI_Comm_detach_buffer")) {
+        annotateMPICommSessionDetachBuffer(func);
+    }
+    if (auto *func = M.getFunction("MPI_Session_detach_buffer")) {
+        annotateMPICommSessionDetachBuffer(func);
+    }
+    if (auto *func = M.getFunction("MPI_Buffer_detach")) {
+        annotateMPIBufferDetach(func);
+    }
+
+    // Point-to-point communication
     if (auto *func = M.getFunction("MPI_Send")) {
+        annotateMPISend(func);
+    }
+    if (auto *func = M.getFunction("MPI_Bsend")) {
+        annotateMPISend(func);
+    }
+    if (auto *func = M.getFunction("MPI_Rsend")) {
+        annotateMPISend(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ssend")) {
         annotateMPISend(func);
     }
     if (auto *func = M.getFunction("MPI_Recv")) {
         annotateMPIRecv(func);
     }
+    if (auto *func = M.getFunction("MPI_Sendrecv")) {
+        annotateMPISendrecv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Sendrecv_replace")) {
+        annotateMPISendrecvReplace(func);
+    }
+
+    // Collective Communication
     // we potentially did modify the module
     return true;
 }
