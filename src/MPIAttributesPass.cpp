@@ -48,6 +48,7 @@ bool runMPIAttributesPass(llvm::Module &M) {
     }
 
     // Point-to-point communication
+    // blocking
     if (auto *func = M.getFunction("MPI_Send")) {
         annotateMPISend(func);
     }
@@ -68,6 +69,58 @@ bool runMPIAttributesPass(llvm::Module &M) {
     }
     if (auto *func = M.getFunction("MPI_Sendrecv_replace")) {
         annotateMPISendrecvReplace(func);
+    }
+    // nonblocking
+    if (auto *func = M.getFunction("MPI_Isend")) {
+        annotateMPIIsend(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ibsend")) {
+        annotateMPIIsend(func);
+    }
+    if (auto *func = M.getFunction("MPI_Irsend")) {
+        annotateMPIIsend(func);
+    }
+    if (auto *func = M.getFunction("MPI_Issend")) {
+        annotateMPIIsend(func);
+    }
+    if (auto *func = M.getFunction("MPI_Irecv")) {
+        annotateMPIRecv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Isendrecv")) {
+        annotateMPISendrecv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Isendrecv_replace")) {
+        annotateMPISendrecvReplace(func);
+    }
+    if (auto *func = M.getFunction("MPI_Wait")) {
+        annotateMPIWait(func);
+    }
+    if (auto *func = M.getFunction("MPI_Test")) {
+        annotateMPITest(func);
+    }
+    if (auto *func = M.getFunction("MPI_Waitany")) {
+        annotateMPIWaitany(func);
+    }
+    if (auto *func = M.getFunction("MPI_Testany")) {
+        annotateMPITestany(func);
+    }
+    if (auto *func = M.getFunction("MPI_Waitall")) {
+        annotateMPIWaitall(func);
+    }
+    if (auto *func = M.getFunction("MPI_Testall")) {
+        annotateMPITestall(func);
+    }
+    if (auto *func = M.getFunction("MPI_Waitsome")) {
+        annotateMPIWaitTestsome(func);
+    }
+    if (auto *func = M.getFunction("MPI_Testsome")) {
+        annotateMPIWaitTestsome(func);
+    }
+    if (auto *func = M.getFunction("MPI_Probe")) {
+        annotateMPIProbe(func);
+    }
+    if (auto *func = M.getFunction("MPI_Iprobe")) {
+        annotateMPIIprobe(func);
     }
 
     // Collective Communication

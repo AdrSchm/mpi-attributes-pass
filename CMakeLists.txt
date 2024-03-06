@@ -6,6 +6,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 project(LLVM_mpiattrs)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 find_package(LLVM 17 REQUIRED CONFIG)
 
 include_directories(${LLVM_INCLUDE_DIRS})
@@ -16,11 +18,13 @@ list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
 include(AddLLVM)
 add_llvm_pass_plugin(MPIAttrs
   ./src/MPIAttributesPass.cpp
-  ./src/MPIAnnotationFunctions.cpp
+  ./src/MPIAnnotationOther.cpp
+  ./src/MPIAnnotationPointToPoint.cpp
 
   PLUGIN_TOOL
   opt
 )
+
 if (DEFINED "USE_OPENMPI")
   add_compile_definitions(USE_OPENMPI)
 endif()
