@@ -15,7 +15,16 @@
    accordingly
 */
 bool runMPIAttributesPass(llvm::Module &M) {
-    // Setup and teardown operations
+    annotateMPISetupTeardown(M);
+    annotateMPIPointToPointBlocking(M);
+    annotateMPIPointToPointNonblocking(M);
+    annotateMPICollective(M);
+
+    // we potentially did modify the module
+    return true;
+}
+
+void annotateMPISetupTeardown(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Init")) {
         annotateMPIInitFinalize(func);
     }
@@ -46,9 +55,9 @@ bool runMPIAttributesPass(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Buffer_detach")) {
         annotateMPIBufferDetach(func);
     }
+}
 
-    // Point-to-point communication
-    // blocking
+void annotateMPIPointToPointBlocking(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Send")) {
         annotateMPISend(func);
     }
@@ -70,7 +79,9 @@ bool runMPIAttributesPass(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Sendrecv_replace")) {
         annotateMPISendrecvReplace(func);
     }
-    // nonblocking
+}
+
+void annotateMPIPointToPointNonblocking(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Isend")) {
         annotateMPIIsend(func);
     }
@@ -122,18 +133,23 @@ bool runMPIAttributesPass(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Iprobe")) {
         annotateMPIIprobe(func);
     }
-
-    // Collective Communication
-    // we potentially did modify the module
-    return true;
+    if (auto *func = M.getFunction("MPI_Cancel")) {
+        annotateMPICancel(func);
+    }
+    if (auto *func = M.getFunction("MPI_Test_cancelled")) {
+        annotateMPITestCancelled(func);
+    }
 }
+
+void annotateMPICollective(llvm::Module &M) {}
 
 /****************************************************************\
 |                                                                |
 |   from here on boilerplate code to get it all up and running   |
 |                                                                |
 \****************************************************************/
-llvm::PreservedAnalyses MPIAttributesPass::run(llvm::Module &M, llvm::ModuleAnalysisManager &MAM) {
+llvm::PreservedAnalyses MPIAttributesPass::run(llvm::Module &M,
+                                               llvm::ModuleAnalysisManager & /*MAM*/) {
     if (!runMPIAttributesPass(M)) {
         return llvm::PreservedAnalyses::all();
     }

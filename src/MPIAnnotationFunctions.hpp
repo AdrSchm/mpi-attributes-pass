@@ -12,10 +12,12 @@ void annotateMPICommSessionDetachBuffer(llvm::Function *F);
 void annotateMPIBufferDetach(llvm::Function *F);
 
 // Point-to-point communication
+// blocking
 void annotateMPISend(llvm::Function *F);
 void annotateMPIRecv(llvm::Function *F);
 void annotateMPISendrecv(llvm::Function *F);
 void annotateMPISendrecvReplace(llvm::Function *F);
+// nonblocking
 void annotateMPIIsend(llvm::Function *F);
 void annotateMPIWait(llvm::Function *F);
 void annotateMPITest(llvm::Function *F);
@@ -26,6 +28,8 @@ void annotateMPITestall(llvm::Function *F);
 void annotateMPIWaitTestsome(llvm::Function *F);
 void annotateMPIProbe(llvm::Function *F);
 void annotateMPIIprobe(llvm::Function *F);
+void annotateMPICancel(llvm::Function *F);
+void annotateMPITestCancelled(llvm::Function *F);
 
 // Collective communication
 

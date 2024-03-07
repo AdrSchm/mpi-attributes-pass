@@ -289,3 +289,25 @@ void annotateMPIIprobe(llvm::Function *F) {
     F->addParamAttr(4, WriteOnly);
     F->addParamAttr(4, NoCapture);
 }
+
+void annotateMPICancel(llvm::Function *F) {
+    F->setOnlyAccessesInaccessibleMemOrArgMem();
+    F->setDoesNotFreeMemory();
+
+    // request
+    F->addParamAttr(0, ReadOnly);
+    F->addParamAttr(0, NoCapture);
+}
+
+void annotateMPITestCancelled(llvm::Function *F) {
+    F->setOnlyAccessesInaccessibleMemOrArgMem();
+    F->setDoesNotFreeMemory();
+
+    // status
+    F->addParamAttr(0, ReadOnly);
+    F->addParamAttr(0, NoCapture);
+
+    // flag
+    F->addParamAttr(1, WriteOnly);
+    F->addParamAttr(1, NoCapture);
+}
