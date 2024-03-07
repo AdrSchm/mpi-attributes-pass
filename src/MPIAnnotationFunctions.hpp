@@ -32,5 +32,8 @@ void annotateMPICancel(llvm::Function *F);
 void annotateMPITestCancelled(llvm::Function *F);
 
 // Collective communication
+void annotateMPIBarrier(llvm::Function *F);
+void annotateMPIBcast(llvm::Function *F);
+void annotateMPIGather(llvm::Function *F);
 
 #endif

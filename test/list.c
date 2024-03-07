@@ -24,8 +24,8 @@ int main(int argc, char **argv) {
     MPI_Issend(&buf, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &req);
     MPI_Irsend(&buf, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &req);
     MPI_Irecv(&buf, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &req);
-    //MPI_Isendrecv(&buf, 1, MPI_INT, 0, 0, &buf, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &req);
-    //MPI_Isendrecv_replace(&buf, 1, MPI_INT, 0, 0, 0, 0, MPI_COMM_WORLD, &req);
+    // MPI_Isendrecv(&buf, 1, MPI_INT, 0, 0, &buf, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &req);
+    // MPI_Isendrecv_replace(&buf, 1, MPI_INT, 0, 0, 0, 0, MPI_COMM_WORLD, &req);
     MPI_Wait(&req, &stat);
     MPI_Test(&req, &buf, &stat);
     MPI_Waitany(1, &req, &buf, &stat);
@@ -38,4 +38,9 @@ int main(int argc, char **argv) {
     MPI_Iprobe(0, 0, MPI_COMM_WORLD, &buf, &stat);
     MPI_Cancel(&req);
     MPI_Test_cancelled(&stat, &buf);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Bcast(&buf, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(MPI_IN_PLACE, 1, MPI_INT, &buf, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(&buf, 1, MPI_INT, &buf, 1, MPI_INT, 0, MPI_COMM_WORLD);
 }

@@ -141,7 +141,17 @@ void annotateMPIPointToPointNonblocking(llvm::Module &M) {
     }
 }
 
-void annotateMPICollective(llvm::Module &M) {}
+void annotateMPICollective(llvm::Module &M) {
+    if (auto *func = M.getFunction("MPI_Barrier")) {
+        annotateMPIBarrier(func);
+    }
+    if (auto *func = M.getFunction("MPI_Bcast")) {
+        annotateMPIBcast(func);
+    }
+    if (auto *func = M.getFunction("MPI_Gather")) {
+        annotateMPIGather(func);
+    }
+}
 
 /****************************************************************\
 |                                                                |
