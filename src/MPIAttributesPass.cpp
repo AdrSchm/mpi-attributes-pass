@@ -151,6 +151,30 @@ void annotateMPICollective(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Gather")) {
         annotateMPIGather(func);
     }
+    if (auto *func = M.getFunction("MPI_Gatherv")) {
+        annotateMPIGatherv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Scatter")) {
+        annotateMPIScatter(func);
+    }
+    if (auto *func = M.getFunction("MPI_Scatterv")) {
+        annotateMPIScatterv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Allgather")) {
+        annotateMPIAllgatherAlltoall(func);
+    }
+    if (auto *func = M.getFunction("MPI_Allgatherv")) {
+        annotateMPIAllgatherv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Alltoall")) {
+        annotateMPIAllgatherAlltoall(func);
+    }
+    if (auto *func = M.getFunction("MPI_Alltoallv")) {
+        annotateMPIAlltoallv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Alltoallw")) {
+        annotateMPIAlltoallw(func);
+    }
 }
 
 /****************************************************************\

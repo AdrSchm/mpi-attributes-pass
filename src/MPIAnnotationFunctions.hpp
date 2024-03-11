@@ -35,5 +35,12 @@ void annotateMPITestCancelled(llvm::Function *F);
 void annotateMPIBarrier(llvm::Function *F);
 void annotateMPIBcast(llvm::Function *F);
 void annotateMPIGather(llvm::Function *F);
+void annotateMPIGatherv(llvm::Function *F);
+void annotateMPIScatter(llvm::Function *F);
+void annotateMPIScatterv(llvm::Function *F);
+void annotateMPIAllgatherAlltoall(llvm::Function *F);
+void annotateMPIAllgatherv(llvm::Function *F);
+void annotateMPIAlltoallv(llvm::Function *F);
+void annotateMPIAlltoallw(llvm::Function *F);
 
 #endif

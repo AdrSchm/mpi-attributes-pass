@@ -1,9 +1,15 @@
+/*==================================================================================*\
+ *                                                                                  *
+ * NO USEFUL PROGRAM! ONLY USED TO SEE IF ALL ATTRIBUTES ARE ANNOTATED AS EXPECTED! *
+ *                                                                                  *
+\*==================================================================================*/
 #include <mpi.h>
 
 int main(int argc, char **argv) {
     int buf;
     MPI_Status stat;
     MPI_Request req;
+    MPI_Datatype *types;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &buf);
@@ -42,5 +48,14 @@ int main(int argc, char **argv) {
     MPI_Barrier(MPI_COMM_WORLD);
     MPI_Bcast(&buf, 1, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Gather(MPI_IN_PLACE, 1, MPI_INT, &buf, 1, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Gather(&buf, 1, MPI_INT, &buf, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(MPI_IN_PLACE, 1, MPI_INT, &buf, &buf, &buf, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(&buf, 1, MPI_INT, MPI_IN_PLACE, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatterv(&buf, &buf, &buf, MPI_INT, MPI_IN_PLACE, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Allgather(MPI_IN_PLACE, 1, MPI_INT, &buf, 1, MPI_INT, MPI_COMM_WORLD);
+    MPI_Allgatherv(MPI_IN_PLACE, 1, MPI_INT, &buf, &buf, &buf, MPI_INT, MPI_COMM_WORLD);
+    MPI_Alltoall(MPI_IN_PLACE, 1, MPI_INT, &buf, 1, MPI_INT, MPI_COMM_WORLD);
+    MPI_Alltoallv(&buf, &buf, &buf, MPI_INT, &buf, &buf, &buf, MPI_INT, MPI_COMM_WORLD);
+    MPI_Alltoallv(MPI_IN_PLACE, &buf, &buf, MPI_INT, &buf, &buf, &buf, MPI_INT, MPI_COMM_WORLD);
+    MPI_Alltoallw(&buf, &buf, &buf, types, &buf, &buf, &buf, types, MPI_COMM_WORLD);
+    MPI_Alltoallw(MPI_IN_PLACE, &buf, &buf, types, &buf, &buf, &buf, types, MPI_COMM_WORLD);
 }
