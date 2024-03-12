@@ -18,7 +18,8 @@ bool runMPIAttributesPass(llvm::Module &M) {
     annotateMPISetupTeardown(M);
     annotateMPIPointToPointBlocking(M);
     annotateMPIPointToPointNonblocking(M);
-    annotateMPICollective(M);
+    annotateMPICollectiveBlocking(M);
+    annotateMPICollectiveNonblocking(M);
 
     // we potentially did modify the module
     return true;
@@ -141,7 +142,7 @@ void annotateMPIPointToPointNonblocking(llvm::Module &M) {
     }
 }
 
-void annotateMPICollective(llvm::Module &M) {
+void annotateMPICollectiveBlocking(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Barrier")) {
         annotateMPIBarrier(func);
     }
@@ -175,6 +176,31 @@ void annotateMPICollective(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Alltoallw")) {
         annotateMPIAlltoallw(func);
     }
+    if (auto *func = M.getFunction("MPI_Reduce")) {
+        annotateMPIReduce(func);
+    }
+    if (auto *func = M.getFunction("MPI_Allreduce")) {
+        annotateMPIAllreduce(func);
+    }
+    if (auto *func = M.getFunction("MPI_Reduce_local")) {
+        annotateMPIReduceLocal(func);
+    }
+    if (auto *func = M.getFunction("MPI_Reduce_scatter_block")) {
+        annotateMPIReduceScatterBlock(func);
+    }
+    if (auto *func = M.getFunction("MPI_Reduce_scatter")) {
+        annotateMPIReduceScatter(func);
+    }
+    if (auto *func = M.getFunction("MPI_Scan")) {
+        annotateMPIScanExscan(func);
+    }
+    if (auto *func = M.getFunction("MPI_Exscan")) {
+        annotateMPIScanExscan(func);
+    }
+}
+
+void annotateMPICollectiveNonblocking(llvm::Module &M) {
+    
 }
 
 /****************************************************************\

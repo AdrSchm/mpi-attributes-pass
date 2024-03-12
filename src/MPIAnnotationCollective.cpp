@@ -453,3 +453,131 @@ void annotateMPIAlltoallw(llvm::Function *F) {
     F->addParamAttr(8, NoCapture);
 #endif
 }
+
+void annotateMPIReduce(llvm::Function *F) {
+    F->setOnlyAccessesInaccessibleMemOrArgMem();
+    F->setDoesNotFreeMemory();
+
+    // send buffer
+    // This could be specified as MPI_IN_PLACE, which would allow us to mark it as ReadNone.
+    // However, this again probably wouldn't result in any optimizations, so we take ReadOnly.
+    F->addParamAttr(0, ReadOnly);
+    F->addParamAttr(0, NoCapture);
+
+    // receive buffer
+    // If we could be sure that the call is not happening "in place" we could mark this as
+    // WriteOnly, but this requires runtime information.
+    F->addParamAttr(1, NoCapture);
+
+#ifdef USE_OPENMPI
+    // data type
+    F->addParamAttr(3, ReadOnly);
+    F->addParamAttr(3, NoCapture);
+
+    // operation
+    F->addParamAttr(4, ReadOnly);
+    F->addParamAttr(4, NoCapture);
+
+    // communicator
+    F->addParamAttr(6, ReadOnly);
+    F->addParamAttr(6, NoCapture);
+#endif
+}
+
+void annotateMPIAllreduce(llvm::Function *F) {
+    F->setOnlyAccessesInaccessibleMemOrArgMem();
+    F->setDoesNotFreeMemory();
+
+    // send buffer
+    // This could be specified as MPI_IN_PLACE, which would allow us to mark it as ReadNone.
+    // However, this again probably wouldn't result in any optimizations, so we take ReadOnly.
+    F->addParamAttr(0, ReadOnly);
+    F->addParamAttr(0, NoCapture);
+
+    // receive buffer
+    // If we could be sure that the call is not happening "in place" we could mark this as
+    // WriteOnly, but this requires runtime information.
+    F->addParamAttr(1, NoCapture);
+
+#ifdef USE_OPENMPI
+    // data type
+    F->addParamAttr(3, ReadOnly);
+    F->addParamAttr(3, NoCapture);
+
+    // operation
+    F->addParamAttr(4, ReadOnly);
+    F->addParamAttr(4, NoCapture);
+
+    // communicator
+    F->addParamAttr(5, ReadOnly);
+    F->addParamAttr(5, NoCapture);
+#endif
+}
+
+void annotateMPIReduceLocal(llvm::Function *F) {
+    F->setOnlyAccessesInaccessibleMemOrArgMem();
+    F->setDoesNotFreeMemory();
+
+    // input buffer
+    F->addParamAttr(0, ReadOnly);
+    F->addParamAttr(0, NoCapture);
+
+    // input output buffer
+    F->addParamAttr(1, NoCapture);
+
+#ifdef USE_OPENMPI
+    // data type
+    F->addParamAttr(3, ReadOnly);
+    F->addParamAttr(3, NoCapture);
+
+    // operation
+    F->addParamAttr(4, ReadOnly);
+    F->addParamAttr(4, NoCapture);
+#endif
+}
+
+void annotateMPIReduceScatterBlock(llvm::Function *F) {
+    // same behavior, this is only separate for better readability
+    annotateMPIAllreduce(F);
+}
+
+void annotateMPIReduceScatter(llvm::Function *F) {
+    F->setOnlyAccessesInaccessibleMemOrArgMem();
+    F->setDoesNotFreeMemory();
+
+    // send buffer
+    // This could be specified as MPI_IN_PLACE, which would allow us to mark it as ReadNone.
+    // However, this again probably wouldn't result in any optimizations, so we take ReadOnly.
+    F->addParamAttr(0, ReadOnly);
+    F->addParamAttr(0, NoCapture);
+
+    // receive buffer
+    // If we could be sure that the call is not happening "in place" we could mark this as
+    // WriteOnly, but this requires runtime information.
+    F->addParamAttr(1, NoCapture);
+
+    // receive count array
+    F->addParamAttr(2, ReadOnly);
+    F->addParamAttr(2, NoCapture);
+
+#ifdef USE_OPENMPI
+    // data type
+    F->addParamAttr(3, ReadOnly);
+    F->addParamAttr(3, NoCapture);
+
+    // operation
+    F->addParamAttr(4, ReadOnly);
+    F->addParamAttr(4, NoCapture);
+
+    // communicator
+    F->addParamAttr(5, ReadOnly);
+    F->addParamAttr(5, NoCapture);
+#endif
+}
+
+void annotateMPIScanExscan(llvm::Function *F) {
+    // same behavior, this is only separate for better readability
+    // only difference in Exscan is that receive buffer of process with rank 0 could be marked
+    // ReadNone if it is not "in place", but this again would require runtime information
+    annotateMPIAllreduce(F);
+}

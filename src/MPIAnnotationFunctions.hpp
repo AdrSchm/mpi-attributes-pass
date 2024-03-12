@@ -32,6 +32,7 @@ void annotateMPICancel(llvm::Function *F);
 void annotateMPITestCancelled(llvm::Function *F);
 
 // Collective communication
+// blocking
 void annotateMPIBarrier(llvm::Function *F);
 void annotateMPIBcast(llvm::Function *F);
 void annotateMPIGather(llvm::Function *F);
@@ -42,5 +43,11 @@ void annotateMPIAllgatherAlltoall(llvm::Function *F);
 void annotateMPIAllgatherv(llvm::Function *F);
 void annotateMPIAlltoallv(llvm::Function *F);
 void annotateMPIAlltoallw(llvm::Function *F);
+void annotateMPIReduce(llvm::Function *F);
+void annotateMPIAllreduce(llvm::Function *F);
+void annotateMPIReduceLocal(llvm::Function *F);
+void annotateMPIReduceScatterBlock(llvm::Function *F);
+void annotateMPIReduceScatter(llvm::Function *F);
+void annotateMPIScanExscan(llvm::Function *F);
 
 #endif

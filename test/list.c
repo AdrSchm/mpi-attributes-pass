@@ -58,4 +58,11 @@ int main(int argc, char **argv) {
     MPI_Alltoallv(MPI_IN_PLACE, &buf, &buf, MPI_INT, &buf, &buf, &buf, MPI_INT, MPI_COMM_WORLD);
     MPI_Alltoallw(&buf, &buf, &buf, types, &buf, &buf, &buf, types, MPI_COMM_WORLD);
     MPI_Alltoallw(MPI_IN_PLACE, &buf, &buf, types, &buf, &buf, &buf, types, MPI_COMM_WORLD);
+    MPI_Reduce(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Allreduce(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Reduce_local(&buf, &buf, 1, MPI_INT, MPI_SUM);
+    MPI_Reduce_scatter_block(&buf, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Reduce_scatter(&buf, &buf, &buf, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Scan(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Exscan(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 }
