@@ -168,8 +168,8 @@ void annotateMPITest(llvm::Function *F) {
     F->addParamAttr(1, NoCapture);
 
     // status
-    F->addParamAttr(0, WriteOnly);
-    F->addParamAttr(0, NoCapture);
+    F->addParamAttr(2, WriteOnly);
+    F->addParamAttr(2, NoCapture);
 }
 
 void annotateMPIWaitany(llvm::Function *F) {

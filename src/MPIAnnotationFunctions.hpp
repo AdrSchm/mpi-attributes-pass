@@ -49,5 +49,21 @@ void annotateMPIReduceLocal(llvm::Function *F);
 void annotateMPIReduceScatterBlock(llvm::Function *F);
 void annotateMPIReduceScatter(llvm::Function *F);
 void annotateMPIScanExscan(llvm::Function *F);
+// nonblocking
+void annotateMPIIbarrier(llvm::Function *F);
+void annotateMPIIbcast(llvm::Function *F);
+void annotateMPIIgather(llvm::Function *F);
+void annotateMPIIgatherv(llvm::Function *F);
+void annotateMPIIscatter(llvm::Function *F);
+void annotateMPIIscatterv(llvm::Function *F);
+void annotateMPIIallgatherIalltoall(llvm::Function *F);
+void annotateMPIIallgatherv(llvm::Function *F);
+void annotateMPIIalltoallv(llvm::Function *F);
+void annotateMPIIalltoallw(llvm::Function *F);
+void annotateMPIIreduce(llvm::Function *F);
+void annotateMPIIallreduce(llvm::Function *F);
+void annotateMPIIreduceScatterBlock(llvm::Function *F);
+void annotateMPIIreduceScatter(llvm::Function *F);
+void annotateMPIIscanIexscan(llvm::Function *F);
 
 #endif

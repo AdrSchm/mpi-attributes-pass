@@ -65,4 +65,22 @@ int main(int argc, char **argv) {
     MPI_Reduce_scatter(&buf, &buf, &buf, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
     MPI_Scan(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
     MPI_Exscan(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+
+    MPI_Ibarrier(MPI_COMM_WORLD, &req);
+    MPI_Ibcast(&buf, 1, MPI_INT, 0, MPI_COMM_WORLD, &req);
+    MPI_Igather(MPI_IN_PLACE, 1, MPI_INT, &buf, 1, MPI_INT, 0, MPI_COMM_WORLD, &req);
+    MPI_Igatherv(MPI_IN_PLACE, 1, MPI_INT, &buf, &buf, &buf, MPI_INT, 0, MPI_COMM_WORLD, &req);
+    MPI_Iscatter(&buf, 1, MPI_INT, MPI_IN_PLACE, 1, MPI_INT, 0, MPI_COMM_WORLD, &req);
+    MPI_Iscatterv(&buf, &buf, &buf, MPI_INT, MPI_IN_PLACE, 1, MPI_INT, 0, MPI_COMM_WORLD, &req);
+    MPI_Iallgather(MPI_IN_PLACE, 1, MPI_INT, &buf, 1, MPI_INT, MPI_COMM_WORLD, &req);
+    MPI_Iallgatherv(MPI_IN_PLACE, 1, MPI_INT, &buf, &buf, &buf, MPI_INT, MPI_COMM_WORLD, &req);
+    MPI_Ialltoall(MPI_IN_PLACE, 1, MPI_INT, &buf, 1, MPI_INT, MPI_COMM_WORLD, &req);
+    MPI_Ialltoallv(MPI_IN_PLACE, &buf, &buf, MPI_INT, &buf, &buf, &buf, MPI_INT, MPI_COMM_WORLD, &req);
+    MPI_Ialltoallw(&buf, &buf, &buf, types, &buf, &buf, &buf, types, MPI_COMM_WORLD, &req);
+    MPI_Ireduce(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD, &req);
+    MPI_Iallreduce(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD, &req);
+    MPI_Ireduce_scatter_block(&buf, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD, &req);
+    MPI_Ireduce_scatter(&buf, &buf, &buf, MPI_INT, MPI_SUM, MPI_COMM_WORLD, &req);
+    MPI_Iscan(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD, &req);
+    MPI_Iexscan(MPI_IN_PLACE, &buf, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD, &req);
 }

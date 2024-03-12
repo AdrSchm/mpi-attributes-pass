@@ -200,7 +200,57 @@ void annotateMPICollectiveBlocking(llvm::Module &M) {
 }
 
 void annotateMPICollectiveNonblocking(llvm::Module &M) {
-    
+    if (auto *func = M.getFunction("MPI_Ibarrier")) {
+        annotateMPIIbarrier(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ibcast")) {
+        annotateMPIIbcast(func);
+    }
+    if (auto *func = M.getFunction("MPI_Igather")) {
+        annotateMPIIgather(func);
+    }
+    if (auto *func = M.getFunction("MPI_Igatherv")) {
+        annotateMPIIgatherv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Iscatter")) {
+        annotateMPIIscatter(func);
+    }
+    if (auto *func = M.getFunction("MPI_Iscatterv")) {
+        annotateMPIIscatterv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Iallgather")) {
+        annotateMPIIallgatherIalltoall(func);
+    }
+    if (auto *func = M.getFunction("MPI_Iallgatherv")) {
+        annotateMPIIallgatherv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ialltoall")) {
+        annotateMPIIallgatherIalltoall(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ialltoallv")) {
+        annotateMPIIalltoallv(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ialltoallw")) {
+        annotateMPIIalltoallw(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ireduce")) {
+        annotateMPIIreduce(func);
+    }
+    if (auto *func = M.getFunction("MPI_Iallreduce")) {
+        annotateMPIIallreduce(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ireduce_scatter_block")) {
+        annotateMPIIreduceScatterBlock(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ireduce_scatter")) {
+        annotateMPIIreduceScatter(func);
+    }
+    if (auto *func = M.getFunction("MPI_Iscan")) {
+        annotateMPIIscanIexscan(func);
+    }
+    if (auto *func = M.getFunction("MPI_Iexscan")) {
+        annotateMPIIscanIexscan(func);
+    }
 }
 
 /****************************************************************\
