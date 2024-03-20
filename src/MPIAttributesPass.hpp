@@ -8,6 +8,7 @@
 // this is the actual functionality
 bool runMPIAttributesPass(llvm::Module &M);
 void annotateMPISetupTeardown(llvm::Module &M);
+void annotateMPITestWait(llvm::Module &M);
 void annotateMPIPointToPointBlocking(llvm::Module &M);
 void annotateMPIPointToPointNonblocking(llvm::Module &M);
 void annotateMPICollectiveBlocking(llvm::Module &M);

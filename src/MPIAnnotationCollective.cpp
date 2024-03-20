@@ -3,6 +3,9 @@
 // we don't actually need any MPI functions, only the macro that defines MPI_IN_PLACE
 #ifdef USE_OPENMPI
 #include <mpi.h>
+#ifndef OPEN_MPI
+#error "Building for OpenMPI without OpenMPI header";
+#endif
 #endif
 
 #include "llvm/IR/Argument.h"

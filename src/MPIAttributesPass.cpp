@@ -16,6 +16,7 @@
 */
 bool runMPIAttributesPass(llvm::Module &M) {
     annotateMPISetupTeardown(M);
+    annotateMPITestWait(M);
     annotateMPIPointToPointBlocking(M);
     annotateMPIPointToPointNonblocking(M);
     annotateMPICollectiveBlocking(M);
@@ -55,6 +56,45 @@ void annotateMPISetupTeardown(llvm::Module &M) {
     }
     if (auto *func = M.getFunction("MPI_Buffer_detach")) {
         annotateMPIBufferDetach(func);
+    }
+}
+
+void annotateMPITestWait(llvm::Module &M) {
+    if (auto *func = M.getFunction("MPI_Wait")) {
+        annotateMPIWait(func);
+    }
+    if (auto *func = M.getFunction("MPI_Test")) {
+        annotateMPITest(func);
+    }
+    if (auto *func = M.getFunction("MPI_Waitany")) {
+        annotateMPIWaitany(func);
+    }
+    if (auto *func = M.getFunction("MPI_Testany")) {
+        annotateMPITestany(func);
+    }
+    if (auto *func = M.getFunction("MPI_Waitall")) {
+        annotateMPIWaitall(func);
+    }
+    if (auto *func = M.getFunction("MPI_Testall")) {
+        annotateMPITestall(func);
+    }
+    if (auto *func = M.getFunction("MPI_Waitsome")) {
+        annotateMPIWaitTestsome(func);
+    }
+    if (auto *func = M.getFunction("MPI_Testsome")) {
+        annotateMPIWaitTestsome(func);
+    }
+    if (auto *func = M.getFunction("MPI_Probe")) {
+        annotateMPIProbe(func);
+    }
+    if (auto *func = M.getFunction("MPI_Iprobe")) {
+        annotateMPIIprobe(func);
+    }
+    if (auto *func = M.getFunction("MPI_Cancel")) {
+        annotateMPICancel(func);
+    }
+    if (auto *func = M.getFunction("MPI_Test_cancelled")) {
+        annotateMPITestCancelled(func);
     }
 }
 
@@ -103,42 +143,6 @@ void annotateMPIPointToPointNonblocking(llvm::Module &M) {
     }
     if (auto *func = M.getFunction("MPI_Isendrecv_replace")) {
         annotateMPISendrecvReplace(func);
-    }
-    if (auto *func = M.getFunction("MPI_Wait")) {
-        annotateMPIWait(func);
-    }
-    if (auto *func = M.getFunction("MPI_Test")) {
-        annotateMPITest(func);
-    }
-    if (auto *func = M.getFunction("MPI_Waitany")) {
-        annotateMPIWaitany(func);
-    }
-    if (auto *func = M.getFunction("MPI_Testany")) {
-        annotateMPITestany(func);
-    }
-    if (auto *func = M.getFunction("MPI_Waitall")) {
-        annotateMPIWaitall(func);
-    }
-    if (auto *func = M.getFunction("MPI_Testall")) {
-        annotateMPITestall(func);
-    }
-    if (auto *func = M.getFunction("MPI_Waitsome")) {
-        annotateMPIWaitTestsome(func);
-    }
-    if (auto *func = M.getFunction("MPI_Testsome")) {
-        annotateMPIWaitTestsome(func);
-    }
-    if (auto *func = M.getFunction("MPI_Probe")) {
-        annotateMPIProbe(func);
-    }
-    if (auto *func = M.getFunction("MPI_Iprobe")) {
-        annotateMPIIprobe(func);
-    }
-    if (auto *func = M.getFunction("MPI_Cancel")) {
-        annotateMPICancel(func);
-    }
-    if (auto *func = M.getFunction("MPI_Test_cancelled")) {
-        annotateMPITestCancelled(func);
     }
 }
 

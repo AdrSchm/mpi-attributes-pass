@@ -45,7 +45,7 @@ void annotateMPICommSessionAttachBuffer(llvm::Function *F) {
 }
 
 void annotateMPIBufferAttach(llvm::Function *F) {
-    F->setDoesNotAccessMemory();
+    F->setOnlyAccessesInaccessibleMemory();
     F->doesNotFreeMemory();
 }
 
