@@ -16,11 +16,13 @@
 */
 bool runMPIAttributesPass(llvm::Module &M) {
     annotateMPISetupTeardown(M);
-    annotateMPITestWait(M);
+    annotateMPICommunicationControl(M);
     annotateMPIPointToPointBlocking(M);
     annotateMPIPointToPointNonblocking(M);
+    annotateMPIPointToPointPersistent(M);
     annotateMPICollectiveBlocking(M);
     annotateMPICollectiveNonblocking(M);
+    annotateMPICollectivePersistent(M);
 
     // we potentially did modify the module
     return true;
@@ -59,7 +61,7 @@ void annotateMPISetupTeardown(llvm::Module &M) {
     }
 }
 
-void annotateMPITestWait(llvm::Module &M) {
+void annotateMPICommunicationControl(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Wait")) {
         annotateMPIWait(func);
     }
@@ -95,6 +97,12 @@ void annotateMPITestWait(llvm::Module &M) {
     }
     if (auto *func = M.getFunction("MPI_Test_cancelled")) {
         annotateMPITestCancelled(func);
+    }
+    if (auto *func = M.getFunction("MPI_Start")) {
+        annotateMPIStart(func);
+    }
+    if (auto *func = M.getFunction("MPI_Startall")) {
+        annotateMPIStartall(func);
     }
 }
 
@@ -143,6 +151,24 @@ void annotateMPIPointToPointNonblocking(llvm::Module &M) {
     }
     if (auto *func = M.getFunction("MPI_Isendrecv_replace")) {
         annotateMPISendrecvReplace(func);
+    }
+}
+
+void annotateMPIPointToPointPersistent(llvm::Module &M) {
+    if (auto *func = M.getFunction("MPI_Send_init")) {
+        annotateMPISendInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Bsend_init")) {
+        annotateMPISendInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Rsend_init")) {
+        annotateMPISendInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Ssend_init")) {
+        annotateMPISendInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Recv_init")) {
+        annotateMPIRecvInit(func);
     }
 }
 
@@ -254,6 +280,60 @@ void annotateMPICollectiveNonblocking(llvm::Module &M) {
     }
     if (auto *func = M.getFunction("MPI_Iexscan")) {
         annotateMPIIscanIexscan(func);
+    }
+}
+
+void annotateMPICollectivePersistent(llvm::Module &M) {
+    if (auto *func = M.getFunction("MPI_Barrier_init")) {
+        annotateMPIBarrierInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Bcast_init")) {
+        annotateMPIBcastInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Gather_init")) {
+        annotateMPIGatherInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Gatherv_init")) {
+        annotateMPIGathervInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Scatter_init")) {
+        annotateMPIScatterInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Scatterv_init")) {
+        annotateMPIScattervInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Allgather_init")) {
+        annotateMPIAllgatherAlltoallInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Allgatherv_init")) {
+        annotateMPIAllgathervInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Alltoall_init")) {
+        annotateMPIAllgatherAlltoallInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Alltoallv_init")) {
+        annotateMPIAlltoallvInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Alltoallw_init")) {
+        annotateMPIAlltoallwInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Reduce_init")) {
+        annotateMPIReduceInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Allreduce_init")) {
+        annotateMPIAllreduceInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Reduce_scatter_block_init")) {
+        annotateMPIReduceScatterBlockInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Reduce_scatter_init")) {
+        annotateMPIReduceScatterInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Scan_init")) {
+        annotateMPIScanExscanInit(func);
+    }
+    if (auto *func = M.getFunction("MPI_Exscan_init")) {
+        annotateMPIScanExscanInit(func);
     }
 }
 

@@ -11,7 +11,7 @@ void annotateMPIBufferAttach(llvm::Function *F);
 void annotateMPICommSessionDetachBuffer(llvm::Function *F);
 void annotateMPIBufferDetach(llvm::Function *F);
 
-// Test and wait for nonblocking communication
+// Communication control
 void annotateMPIWait(llvm::Function *F);
 void annotateMPITest(llvm::Function *F);
 void annotateMPIWaitany(llvm::Function *F);
@@ -23,6 +23,8 @@ void annotateMPIProbe(llvm::Function *F);
 void annotateMPIIprobe(llvm::Function *F);
 void annotateMPICancel(llvm::Function *F);
 void annotateMPITestCancelled(llvm::Function *F);
+void annotateMPIStart(llvm::Function *F);
+void annotateMPIStartall(llvm::Function *F);
 
 // Point-to-point communication
 // blocking
@@ -32,6 +34,9 @@ void annotateMPISendrecv(llvm::Function *F);
 void annotateMPISendrecvReplace(llvm::Function *F);
 // nonblocking
 void annotateMPIIsend(llvm::Function *F);
+// persistent
+void annotateMPISendInit(llvm::Function *F);
+void annotateMPIRecvInit(llvm::Function *F);
 
 // Collective communication
 // blocking
@@ -67,5 +72,21 @@ void annotateMPIIallreduce(llvm::Function *F);
 void annotateMPIIreduceScatterBlock(llvm::Function *F);
 void annotateMPIIreduceScatter(llvm::Function *F);
 void annotateMPIIscanIexscan(llvm::Function *F);
+// persistent
+void annotateMPIBarrierInit(llvm::Function *F);
+void annotateMPIBcastInit(llvm::Function *F);
+void annotateMPIGatherInit(llvm::Function *F);
+void annotateMPIGathervInit(llvm::Function *F);
+void annotateMPIScatterInit(llvm::Function *F);
+void annotateMPIScattervInit(llvm::Function *F);
+void annotateMPIAllgatherAlltoallInit(llvm::Function *F);
+void annotateMPIAllgathervInit(llvm::Function *F);
+void annotateMPIAlltoallvInit(llvm::Function *F);
+void annotateMPIAlltoallwInit(llvm::Function *F);
+void annotateMPIReduceInit(llvm::Function *F);
+void annotateMPIAllreduceInit(llvm::Function *F);
+void annotateMPIReduceScatterBlockInit(llvm::Function *F);
+void annotateMPIReduceScatterInit(llvm::Function *F);
+void annotateMPIScanExscanInit(llvm::Function *F);
 
 #endif

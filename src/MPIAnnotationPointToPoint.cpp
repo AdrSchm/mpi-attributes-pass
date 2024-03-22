@@ -144,170 +144,42 @@ void annotateMPIIsend(llvm::Function *F) {
     F->addParamAttr(6, NoCapture);
 }
 
-void annotateMPIWait(llvm::Function *F) {
+void annotateMPISendInit(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->setDoesNotFreeMemory();
 
-    // request
-    F->addParamAttr(0, NoCapture);
-
-    // status
-    F->addParamAttr(1, WriteOnly);
-    F->addParamAttr(1, NoCapture);
-}
-
-void annotateMPITest(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // request
-    F->addParamAttr(0, NoCapture);
-
-    // flag
-    F->addParamAttr(1, WriteOnly);
-    F->addParamAttr(1, NoCapture);
-
-    // status
-    F->addParamAttr(2, WriteOnly);
-    F->addParamAttr(2, NoCapture);
-}
-
-void annotateMPIWaitany(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // request array
-    F->addParamAttr(1, NoCapture);
-
-    // index
-    F->addParamAttr(2, WriteOnly);
-    F->addParamAttr(2, NoCapture);
-
-    // status
-    F->addParamAttr(3, WriteOnly);
-    F->addParamAttr(3, NoCapture);
-}
-
-void annotateMPITestany(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // request array
-    F->addParamAttr(1, NoCapture);
-
-    // index
-    F->addParamAttr(2, WriteOnly);
-    F->addParamAttr(2, NoCapture);
-
-    // flag
-    F->addParamAttr(3, WriteOnly);
-    F->addParamAttr(3, NoCapture);
-
-    // status
-    F->addParamAttr(4, WriteOnly);
-    F->addParamAttr(4, NoCapture);
-}
-
-void annotateMPIWaitall(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // request array
-    F->addParamAttr(1, NoCapture);
-
-    // status array
-    F->addParamAttr(2, WriteOnly);
-    F->addParamAttr(2, NoCapture);
-}
-
-void annotateMPITestall(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // request array
-    F->addParamAttr(1, NoCapture);
-
-    // flag
-    F->addParamAttr(2, WriteOnly);
-    F->addParamAttr(2, NoCapture);
-
-    // status array
-    F->addParamAttr(3, WriteOnly);
-    F->addParamAttr(3, NoCapture);
-}
-
-void annotateMPIWaitTestsome(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // request array
-    F->addParamAttr(1, NoCapture);
-
-    // out count
-    F->addParamAttr(2, WriteOnly);
-    F->addParamAttr(2, NoCapture);
-
-    // indices array
-    F->addParamAttr(3, WriteOnly);
-    F->addParamAttr(3, NoCapture);
-
-    // status array
-    F->addParamAttr(4, WriteOnly);
-    F->addParamAttr(4, NoCapture);
-}
-
-void annotateMPIProbe(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
+    // buffer
+    F->addParamAttr(0, ReadNone);
 
 #ifdef USE_OPENMPI
+    // data type
+    F->addParamAttr(2, ReadNone);
+
     // communicator
-    F->addParamAttr(2, ReadOnly);
-    F->addParamAttr(2, NoCapture);
+    F->addParamAttr(5, ReadNone);
 #endif
-
-    // status
-    F->addParamAttr(3, WriteOnly);
-    F->addParamAttr(3, NoCapture);
-}
-
-void annotateMPIIprobe(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-#ifdef USE_OPENMPI
-    // communicator
-    F->addParamAttr(2, ReadOnly);
-    F->addParamAttr(2, NoCapture);
-#endif
-
-    // flag
-    F->addParamAttr(3, WriteOnly);
-    F->addParamAttr(3, NoCapture);
-
-    // status
-    F->addParamAttr(4, WriteOnly);
-    F->addParamAttr(4, NoCapture);
-}
-
-void annotateMPICancel(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
 
     // request
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(0, NoCapture);
+    F->addParamAttr(6, WriteOnly);
+    F->addParamAttr(6, NoCapture);
 }
 
-void annotateMPITestCancelled(llvm::Function *F) {
+void annotateMPIRecvInit(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->setDoesNotFreeMemory();
 
-    // status
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(0, NoCapture);
+    // buffer
+    F->addParamAttr(0, ReadNone);
 
-    // flag
-    F->addParamAttr(1, WriteOnly);
-    F->addParamAttr(1, NoCapture);
+#ifdef USE_OPENMPI
+    // data type
+    F->addParamAttr(2, ReadNone);
+
+    // communicator
+    F->addParamAttr(5, ReadNone);
+#endif
+
+    // request
+    F->addParamAttr(6, WriteOnly);
+    F->addParamAttr(6, NoCapture);
 }

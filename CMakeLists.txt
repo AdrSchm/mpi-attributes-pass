@@ -20,7 +20,9 @@ add_llvm_pass_plugin(MPIAttrs
   ./src/MPIAttributesPass.cpp
   ./src/MPIAnnotationOther.cpp
   ./src/MPIAnnotationPointToPoint.cpp
-  ./src/MPIAnnotationCollective.cpp
+  ./src/MPIAnnotationCollectiveBlocking.cpp
+  ./src/MPIAnnotationCollectiveNonblocking.cpp
+  ./src/MPIAnnotationCollectivePersistent.cpp
 
   PLUGIN_TOOL
   opt
