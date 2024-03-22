@@ -19,12 +19,6 @@ void annotateMPICommSizeRank(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->setDoesNotFreeMemory();
 
-#ifdef USE_OPENMPI
-    // communicator
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(0, NoCapture);
-#endif
-
     // buffer
     F->addParamAttr(1, WriteOnly);
     F->addParamAttr(1, NoCapture);
@@ -33,12 +27,6 @@ void annotateMPICommSizeRank(llvm::Function *F) {
 void annotateMPICommSessionAttachBuffer(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->doesNotFreeMemory();
-
-#ifdef USE_OPENMPI
-    // communicator or session
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(0, NoCapture);
-#endif
 
     // buffer
     F->addParamAttr(1, ReadNone);
@@ -52,12 +40,6 @@ void annotateMPIBufferAttach(llvm::Function *F) {
 void annotateMPICommSessionDetachBuffer(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->doesNotFreeMemory();
-
-#ifdef USE_OPENMPI
-    // communicator or session
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(0, NoCapture);
-#endif
 
     // buffer address
     F->addParamAttr(1, WriteOnly);
@@ -193,12 +175,6 @@ void annotateMPIProbe(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->setDoesNotFreeMemory();
 
-#ifdef USE_OPENMPI
-    // communicator
-    F->addParamAttr(2, ReadOnly);
-    F->addParamAttr(2, NoCapture);
-#endif
-
     // status
     F->addParamAttr(3, WriteOnly);
     F->addParamAttr(3, NoCapture);
@@ -207,12 +183,6 @@ void annotateMPIProbe(llvm::Function *F) {
 void annotateMPIIprobe(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->setDoesNotFreeMemory();
-
-#ifdef USE_OPENMPI
-    // communicator
-    F->addParamAttr(2, ReadOnly);
-    F->addParamAttr(2, NoCapture);
-#endif
 
     // flag
     F->addParamAttr(3, WriteOnly);

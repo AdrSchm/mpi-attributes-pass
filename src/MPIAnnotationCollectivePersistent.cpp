@@ -4,7 +4,7 @@
 #ifdef USE_OPENMPI
 #include <mpi.h>
 #ifndef OPEN_MPI
-#error "Building for OpenMPI without OpenMPI header";
+#error "Building for OpenMPI without OpenMPI header"
 #endif
 #endif
 
@@ -25,15 +25,6 @@ void annotateMPIBarrierInit(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->setDoesNotFreeMemory();
 
-#ifdef USE_OPENMPI
-    // communicator
-    F->addParamAttr(0, ReadOnly);
-
-    // info
-    // TODO: check what info does
-    F->addParamAttr(1, ReadOnly);
-#endif
-
     // request
     F->addParamAttr(2, WriteOnly);
     F->addParamAttr(2, NoCapture);
@@ -45,17 +36,6 @@ void annotateMPIBcastInit(llvm::Function *F) {
 
     // buffer
     // ReadWrite and captured
-
-#ifdef USE_OPENMPI
-    // data type
-    F->addParamAttr(2, ReadOnly);
-
-    // communicator
-    F->addParamAttr(4, ReadOnly);
-
-    // info
-    F->addParamAttr(5, ReadOnly);
-#endif
 
     // request
     F->addParamAttr(6, WriteOnly);
@@ -69,24 +49,8 @@ void annotateMPIGatherInit(llvm::Function *F) {
     // send buffer
     F->addParamAttr(0, ReadNone);
 
-#ifdef USE_OPENMPI
-    // send data type
-    F->addParamAttr(2, ReadOnly);
-#endif
-
     // receive buffer
     F->addParamAttr(3, ReadNone);
-
-#ifdef USE_OPENMPI
-    // receive data type
-    F->addParamAttr(5, ReadOnly);
-
-    // communicator
-    F->addParamAttr(7, ReadOnly);
-
-    // info
-    F->addParamAttr(8, ReadOnly);
-#endif
 
     // request
     F->addParamAttr(9, WriteOnly);
@@ -99,11 +63,6 @@ void annotateMPIGathervInit(llvm::Function *F) {
 
     // send buffer
     F->addParamAttr(0, ReadNone);
-
-#ifdef USE_OPENMPI
-    // send data type
-    F->addParamAttr(2, ReadOnly);
-#endif
 
     // receive buffer
     F->addParamAttr(3, ReadNone);
@@ -122,17 +81,6 @@ void annotateMPIGathervInit(llvm::Function *F) {
     F->addParamAttr(5, ReadOnly);
     F->addParamAttr(5, NoCapture);
 
-#ifdef USE_OPENMPI
-    // receive data type
-    F->addParamAttr(6, ReadOnly);
-
-    // communicator
-    F->addParamAttr(8, ReadOnly);
-
-    // info
-    F->addParamAttr(9, ReadOnly);
-#endif
-
     // request
     F->addParamAttr(10, WriteOnly);
     F->addParamAttr(10, NoCapture);
@@ -145,24 +93,8 @@ void annotateMPIScatterInit(llvm::Function *F) {
     // send buffer
     F->addParamAttr(0, ReadNone);
 
-#ifdef USE_OPENMPI
-    // send data type
-    F->addParamAttr(2, ReadOnly);
-#endif
-
     // receive buffer
     F->addParamAttr(3, ReadNone);
-
-#ifdef USE_OPENMPI
-    // receive data type
-    F->addParamAttr(5, ReadOnly);
-
-    // communicator
-    F->addParamAttr(7, ReadOnly);
-
-    // info
-    F->addParamAttr(8, ReadOnly);
-#endif
 
     // request
     F->addParamAttr(9, WriteOnly);
@@ -190,24 +122,8 @@ void annotateMPIScattervInit(llvm::Function *F) {
     F->addParamAttr(2, ReadOnly);
     F->addParamAttr(2, NoCapture);
 
-#ifdef USE_OPENMPI
-    // send data type
-    F->addParamAttr(3, ReadOnly);
-#endif
-
     // receive buffer
     F->addParamAttr(4, ReadNone);
-
-#ifdef USE_OPENMPI
-    // receive data type
-    F->addParamAttr(6, ReadOnly);
-
-    // communicator
-    F->addParamAttr(8, ReadOnly);
-
-    // info
-    F->addParamAttr(9, ReadOnly);
-#endif
 
     // request
     F->addParamAttr(10, WriteOnly);
@@ -221,24 +137,8 @@ void annotateMPIAllgatherAlltoallInit(llvm::Function *F) {
     // send buffer
     F->addParamAttr(0, ReadNone);
 
-#ifdef USE_OPENMPI
-    // send data type
-    F->addParamAttr(2, ReadOnly);
-#endif
-
     // receive buffer
     F->addParamAttr(3, ReadNone);
-
-#ifdef USE_OPENMPI
-    // receive data type
-    F->addParamAttr(5, ReadOnly);
-
-    // communicator
-    F->addParamAttr(6, ReadOnly);
-
-    // info
-    F->addParamAttr(7, ReadOnly);
-#endif
 
     // request
     F->addParamAttr(8, WriteOnly);
@@ -251,11 +151,6 @@ void annotateMPIAllgathervInit(llvm::Function *F) {
 
     // send buffer
     F->addParamAttr(0, ReadNone);
-
-#ifdef USE_OPENMPI
-    // send data type
-    F->addParamAttr(2, ReadOnly);
-#endif
 
     // receive buffer
     F->addParamAttr(3, ReadNone);
@@ -271,17 +166,6 @@ void annotateMPIAllgathervInit(llvm::Function *F) {
     // after initialization, so it is effectively NoCapture
     F->addParamAttr(5, ReadOnly);
     F->addParamAttr(5, NoCapture);
-
-#ifdef USE_OPENMPI
-    // receive data type
-    F->addParamAttr(6, ReadOnly);
-
-    // communicator
-    F->addParamAttr(7, ReadOnly);
-    
-    // info
-    F->addParamAttr(8, ReadOnly);
-#endif
 
     // request
     F->addParamAttr(9, WriteOnly);
@@ -352,11 +236,6 @@ void annotateMPIAlltoallvInit(llvm::Function *F) {
     F->addParamAttr(2, ReadOnly);
 #endif
 
-#ifdef USE_OPENMPI
-    // send data type
-    F->addParamAttr(3, ReadOnly);
-#endif
-
     // receive buffer
     F->addParamAttr(4, ReadNone);
 
@@ -371,17 +250,6 @@ void annotateMPIAlltoallvInit(llvm::Function *F) {
     // after initialization, so it is effectively NoCapture
     F->addParamAttr(6, ReadOnly);
     F->addParamAttr(6, NoCapture);
-
-#ifdef USE_OPENMPI
-    // receive data type
-    F->addParamAttr(7, ReadOnly);
-
-    // communicator
-    F->addParamAttr(8, ReadOnly);
-
-    // info
-    F->addParamAttr(9, ReadOnly);
-#endif
 
     // request
     F->addParamAttr(10, WriteOnly);
@@ -481,14 +349,6 @@ void annotateMPIAlltoallwInit(llvm::Function *F) {
     F->addParamAttr(7, ReadOnly);
     F->addParamAttr(7, NoCapture);
 
-#ifdef USE_OPENMPI
-    // communicator
-    F->addParamAttr(8, ReadOnly);
-
-    // info
-    F->addParamAttr(9, ReadOnly);
-#endif
-
     // request
     F->addParamAttr(10, WriteOnly);
     F->addParamAttr(10, NoCapture);
@@ -504,20 +364,6 @@ void annotateMPIReduceInit(llvm::Function *F) {
     // receive buffer
     F->addParamAttr(1, ReadNone);
 
-#ifdef USE_OPENMPI
-    // data type
-    F->addParamAttr(3, ReadOnly);
-
-    // operation
-    F->addParamAttr(4, ReadOnly);
-
-    // communicator
-    F->addParamAttr(6, ReadOnly);
-
-    // info
-    F->addParamAttr(7, ReadOnly);
-#endif
-
     // request
     F->addParamAttr(8, WriteOnly);
     F->addParamAttr(8, NoCapture);
@@ -532,20 +378,6 @@ void annotateMPIAllreduceInit(llvm::Function *F) {
 
     // receive buffer
     F->addParamAttr(1, ReadNone);
-
-#ifdef USE_OPENMPI
-    // data type
-    F->addParamAttr(3, ReadOnly);
-
-    // operation
-    F->addParamAttr(4, ReadOnly);
-
-    // communicator
-    F->addParamAttr(5, ReadOnly);
-
-    // info
-    F->addParamAttr(6, ReadOnly);
-#endif
 
     // request
     F->addParamAttr(7, WriteOnly);
@@ -572,20 +404,6 @@ void annotateMPIReduceScatterInit(llvm::Function *F) {
     // after initialization, so it is effectively NoCapture
     F->addParamAttr(2, ReadOnly);
     F->addParamAttr(2, NoCapture);
-
-#ifdef USE_OPENMPI
-    // data type
-    F->addParamAttr(3, ReadOnly);
-
-    // operation
-    F->addParamAttr(4, ReadOnly);
-
-    // communicator
-    F->addParamAttr(5, ReadOnly);
-
-    // info
-    F->addParamAttr(6, ReadOnly);
-#endif
 
     // request
     F->addParamAttr(7, WriteOnly);
