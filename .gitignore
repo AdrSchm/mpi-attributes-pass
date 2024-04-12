@@ -1,2 +1,3 @@
 **/build*
-**/test/*.s
+**/test/**
+!**/test/*.c
