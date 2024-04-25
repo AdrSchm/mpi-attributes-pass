@@ -8,6 +8,20 @@
 import re
 import sys
 
+# Returns the index of the character beginning the comment
+# Returns -1 if no comment exists in this line
+def findCommentStart(line):
+    # Extend this list to use other characters as well
+    commentChars = ['#', ';']
+    commentStarts = -1
+    # Find positions of the characters in the current line
+    commentCharPos = [line.find(commentChar) for commentChar in commentChars]
+    # Find the smallest position, ignore -1 from non-existent characters
+    for pos in commentCharPos:
+        if (commentStarts == -1) or (pos != -1 and pos < commentStarts):
+            commentStarts = pos
+    return commentStarts
+
 if __name__ == "__main__":
     # Test whether filenames have been supplied
     if len(sys.argv) == 1:
@@ -31,11 +45,11 @@ if __name__ == "__main__":
             filenames.append(arg)
 
     # Matches instructions with a pair of brackets
-    matcher = matcher = re.compile(r"\[.*\]")
+    matcher = re.compile(r"\[.*\]")
     closingChar = ']'
     if attSyntax:
         matcher = re.compile(r"\(.*\)")  
-        closingChar = ')'  
+        closingChar = ')'
 
     # Iterate through list of filenames
     if len(filenames) == 0:
@@ -67,11 +81,26 @@ if __name__ == "__main__":
                 continue
 
             # From here on splitLine has at least one element
+            # Cases where we have push or pop
+            if splitLine[0][0:4] == "push":
+                commentStarts = findCommentStart(line)
+                pushPos = line.find("push")
+                # Only count it if is not in a comment
+                if commentStarts == -1 or commentStarts > pushPos:
+                    memInsts.append(line)
+                continue
+            
+            if splitLine[0][0:3] == "pop":
+                commentStarts = findCommentStart(line)
+                popPos = line.find("pop")
+                # Only count it if is not in a comment
+                if commentStarts == -1 or commentStarts > popPos:
+                    memInsts.append(line)
+                continue
+
+            # Find pairs of brackets
             matches = matcher.findall(line)
             if len(matches) == 0:
-                # Test whether instead it's a push or pop instruction
-                if splitLine[0][0:4] == "push" or splitLine[0][0:3] == "pop":
-                    memInsts.append(line)
                 continue
 
             # Ignore lines where this is part of a string literal or directive
@@ -86,21 +115,9 @@ if __name__ == "__main__":
             if splitLine[0][0:3] == "lea":
                 continue
             
-            # Case where we have push or pop and the brackets in a comment
-            if splitLine[0][0:4] == "push" or splitLine[0][0:3] == "pop":
-                memInsts.append(line)
-                continue
-            
             # Ignore lines where this is part of a comment
-            commentChars = ['#', ';']
             bracketClosed = line.find(closingChar)
-            commentStarts = -1
-            # Find positions of the characters in the current line
-            commentCharPos = [line.find(commentChar) for commentChar in commentChars]
-            # Find the smallest position, ignore -1 from non-existent characters
-            for pos in commentCharPos:
-                if (commentStarts == -1) or (pos != -1 and pos < commentStarts):
-                    commentStarts = pos
+            commentStarts = findCommentStart(line)
             if commentStarts != -1 and commentStarts < bracketClosed:
                 continue
 

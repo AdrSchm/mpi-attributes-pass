@@ -35,14 +35,14 @@ void annotateMPIBcastInit(llvm::Function *F) {
     F->setDoesNotFreeMemory();
 
     // buffer
-    // ReadWrite and captured
+    F->addParamAttr(0, ReadNone);
 
     // request
     F->addParamAttr(6, WriteOnly);
     F->addParamAttr(6, NoCapture);
 }
 
-void annotateMPIGatherInit(llvm::Function *F) {
+void annotateMPIGatherScatterInit(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->setDoesNotFreeMemory();
 
@@ -84,21 +84,6 @@ void annotateMPIGathervInit(llvm::Function *F) {
     // request
     F->addParamAttr(10, WriteOnly);
     F->addParamAttr(10, NoCapture);
-}
-
-void annotateMPIScatterInit(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // send buffer
-    F->addParamAttr(0, ReadNone);
-
-    // receive buffer
-    F->addParamAttr(3, ReadNone);
-
-    // request
-    F->addParamAttr(9, WriteOnly);
-    F->addParamAttr(9, NoCapture);
 }
 
 void annotateMPIScattervInit(llvm::Function *F) {

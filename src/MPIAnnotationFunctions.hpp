@@ -35,8 +35,7 @@ void annotateMPISendrecvReplace(llvm::Function *F);
 // nonblocking
 void annotateMPIIsend(llvm::Function *F);
 // persistent
-void annotateMPISendInit(llvm::Function *F);
-void annotateMPIRecvInit(llvm::Function *F);
+void annotateMPISendRecvInit(llvm::Function *F);
 
 // Collective communication
 // blocking
@@ -50,8 +49,7 @@ void annotateMPIAllgatherAlltoall(llvm::Function *F);
 void annotateMPIAllgatherv(llvm::Function *F);
 void annotateMPIAlltoallv(llvm::Function *F);
 void annotateMPIAlltoallw(llvm::Function *F);
-void annotateMPIReduce(llvm::Function *F);
-void annotateMPIAllreduce(llvm::Function *F);
+void annotateMPIReduceAllreduce(llvm::Function *F);
 void annotateMPIReduceLocal(llvm::Function *F);
 void annotateMPIReduceScatterBlock(llvm::Function *F);
 void annotateMPIReduceScatter(llvm::Function *F);
@@ -75,9 +73,8 @@ void annotateMPIIscanIexscan(llvm::Function *F);
 // persistent
 void annotateMPIBarrierInit(llvm::Function *F);
 void annotateMPIBcastInit(llvm::Function *F);
-void annotateMPIGatherInit(llvm::Function *F);
+void annotateMPIGatherScatterInit(llvm::Function *F);
 void annotateMPIGathervInit(llvm::Function *F);
-void annotateMPIScatterInit(llvm::Function *F);
 void annotateMPIScattervInit(llvm::Function *F);
 void annotateMPIAllgatherAlltoallInit(llvm::Function *F);
 void annotateMPIAllgathervInit(llvm::Function *F);
