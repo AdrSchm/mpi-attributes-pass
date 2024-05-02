@@ -4,10 +4,9 @@ WORKDIR /opt
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y gcc g++ gdb cmake cmake-curses-gui python3 apt-utils wget gnupg qt5-default git autoconf automake libtool zlib1g-dev zlib1g vim unzip python3-pip python3-pytest python3-pytest-cov openmpi-bin openmpi-common bison flex python2 linux-tools-common linux-tools-generic
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y gcc g++ gdb cmake cmake-curses-gui python3 apt-utils wget software-properties-common gnupg git autoconf automake libtool zlib1g-dev zlib1g vim unzip python3-pip python3-pytest python3-pytest-cov openmpi-bin openmpi-common bison flex python2
 
 RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
-RUN apt install -y software-properties-common
 RUN add-apt-repository 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-17 main'
 #RUN add-apt-repository 'deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-17 main'
 RUN apt update

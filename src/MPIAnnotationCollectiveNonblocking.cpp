@@ -105,7 +105,7 @@ void annotateMPIIalltoallw(llvm::Function *F) {
 
 void annotateMPIIreduce(llvm::Function *F) {
     // behaves like reduce with additional request parameter
-    annotateMPIReduce(F);
+    annotateMPIReduceAllreduce(F);
 
     // request
     F->addParamAttr(7, WriteOnly);
@@ -114,7 +114,7 @@ void annotateMPIIreduce(llvm::Function *F) {
 
 void annotateMPIIallreduce(llvm::Function *F) {
     // behaves like allreduce with additional request parameter
-    annotateMPIAllreduce(F);
+    annotateMPIReduceAllreduce(F);
 
     // request
     F->addParamAttr(6, WriteOnly);

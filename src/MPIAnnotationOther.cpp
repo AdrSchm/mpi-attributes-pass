@@ -181,12 +181,7 @@ void annotateMPIProbe(llvm::Function *F) {
 }
 
 void annotateMPIIprobe(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // flag
-    F->addParamAttr(3, WriteOnly);
-    F->addParamAttr(3, NoCapture);
+    annotateMPIProbe(F);
 
     // status
     F->addParamAttr(4, WriteOnly);

@@ -156,19 +156,19 @@ void annotateMPIPointToPointNonblocking(llvm::Module &M) {
 
 void annotateMPIPointToPointPersistent(llvm::Module &M) {
     if (auto *func = M.getFunction("MPI_Send_init")) {
-        annotateMPISendInit(func);
+        annotateMPISendRecvInit(func);
     }
     if (auto *func = M.getFunction("MPI_Bsend_init")) {
-        annotateMPISendInit(func);
+        annotateMPISendRecvInit(func);
     }
     if (auto *func = M.getFunction("MPI_Rsend_init")) {
-        annotateMPISendInit(func);
+        annotateMPISendRecvInit(func);
     }
     if (auto *func = M.getFunction("MPI_Ssend_init")) {
-        annotateMPISendInit(func);
+        annotateMPISendRecvInit(func);
     }
     if (auto *func = M.getFunction("MPI_Recv_init")) {
-        annotateMPIRecvInit(func);
+        annotateMPISendRecvInit(func);
     }
 }
 
@@ -207,10 +207,10 @@ void annotateMPICollectiveBlocking(llvm::Module &M) {
         annotateMPIAlltoallw(func);
     }
     if (auto *func = M.getFunction("MPI_Reduce")) {
-        annotateMPIReduce(func);
+        annotateMPIReduceAllreduce(func);
     }
     if (auto *func = M.getFunction("MPI_Allreduce")) {
-        annotateMPIAllreduce(func);
+        annotateMPIReduceAllreduce(func);
     }
     if (auto *func = M.getFunction("MPI_Reduce_local")) {
         annotateMPIReduceLocal(func);
@@ -291,13 +291,13 @@ void annotateMPICollectivePersistent(llvm::Module &M) {
         annotateMPIBcastInit(func);
     }
     if (auto *func = M.getFunction("MPI_Gather_init")) {
-        annotateMPIGatherInit(func);
+        annotateMPIGatherScatterInit(func);
     }
     if (auto *func = M.getFunction("MPI_Gatherv_init")) {
         annotateMPIGathervInit(func);
     }
     if (auto *func = M.getFunction("MPI_Scatter_init")) {
-        annotateMPIScatterInit(func);
+        annotateMPIGatherScatterInit(func);
     }
     if (auto *func = M.getFunction("MPI_Scatterv_init")) {
         annotateMPIScattervInit(func);

@@ -88,19 +88,7 @@ void annotateMPIIsend(llvm::Function *F) {
     F->addParamAttr(6, NoCapture);
 }
 
-void annotateMPISendInit(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // buffer
-    F->addParamAttr(0, ReadNone);
-
-    // request
-    F->addParamAttr(6, WriteOnly);
-    F->addParamAttr(6, NoCapture);
-}
-
-void annotateMPIRecvInit(llvm::Function *F) {
+void annotateMPISendRecvInit(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->setDoesNotFreeMemory();
 

@@ -53,21 +53,7 @@ void annotateMPIGather(llvm::Function *F) {
 }
 
 void annotateMPIGatherv(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // send buffer
-    // Potentially the send buffer is specified as MPI_IN_PLACE, which would make it ReadNone.
-    // However, as this probably wouldn't lead to any optimizations, we take the simpler ReadOnly.
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(0, NoCapture);
-
-    // receive buffer
-    // We could mark this as ReadNone if this is not called in the root process, but this requires
-    // runtime information.
-    // If we could be sure that the call is not happening "in place" we could mark this as
-    // WriteOnly, but this requires runtime information.
-    F->addParamAttr(3, NoCapture);
+    annotateMPIGather(F);
 
     // receive count array
     // We could mark this as ReadNone if we could be sure that the process is not the root process
@@ -141,19 +127,7 @@ void annotateMPIAllgatherAlltoall(llvm::Function *F) {
 }
 
 void annotateMPIAllgatherv(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // send buffer
-    // This could be specified as MPI_IN_PLACE, which would allow us to mark it as ReadNone.
-    // However, this again probably wouldn't result in any optimizations, so we take ReadOnly.
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(0, NoCapture);
-
-    // receive buffer
-    // If we could be sure that the call is not happening "in place" we could mark this as
-    // WriteOnly, but this requires runtime information.
-    F->addParamAttr(3, NoCapture);
+    annotateMPIAllgatherAlltoall(F);
 
     // receive count array
     F->addParamAttr(4, ReadOnly);
@@ -328,23 +302,7 @@ void annotateMPIAlltoallw(llvm::Function *F) {
     F->addParamAttr(7, NoCapture);
 }
 
-void annotateMPIReduce(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // send buffer
-    // This could be specified as MPI_IN_PLACE, which would allow us to mark it as ReadNone.
-    // However, this again probably wouldn't result in any optimizations, so we take ReadOnly.
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(0, NoCapture);
-
-    // receive buffer
-    // If we could be sure that the call is not happening "in place" we could mark this as
-    // WriteOnly, but this requires runtime information.
-    F->addParamAttr(1, NoCapture);
-}
-
-void annotateMPIAllreduce(llvm::Function *F) {
+void annotateMPIReduceAllreduce(llvm::Function *F) {
     F->setOnlyAccessesInaccessibleMemOrArgMem();
     F->setDoesNotFreeMemory();
 
@@ -374,23 +332,11 @@ void annotateMPIReduceLocal(llvm::Function *F) {
 
 void annotateMPIReduceScatterBlock(llvm::Function *F) {
     // same behavior, this is only separate for better readability
-    annotateMPIAllreduce(F);
+    annotateMPIReduceAllreduce(F);
 }
 
 void annotateMPIReduceScatter(llvm::Function *F) {
-    F->setOnlyAccessesInaccessibleMemOrArgMem();
-    F->setDoesNotFreeMemory();
-
-    // send buffer
-    // This could be specified as MPI_IN_PLACE, which would allow us to mark it as ReadNone.
-    // However, this again probably wouldn't result in any optimizations, so we take ReadOnly.
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(0, NoCapture);
-
-    // receive buffer
-    // If we could be sure that the call is not happening "in place" we could mark this as
-    // WriteOnly, but this requires runtime information.
-    F->addParamAttr(1, NoCapture);
+    annotateMPIReduceAllreduce(F);
 
     // receive count array
     F->addParamAttr(2, ReadOnly);
@@ -401,5 +347,5 @@ void annotateMPIScanExscan(llvm::Function *F) {
     // same behavior, this is only separate for better readability
     // only difference in Exscan is that receive buffer of process with rank 0 could be marked
     // ReadNone if it is not "in place", but this again would require runtime information
-    annotateMPIAllreduce(F);
+    annotateMPIReduceAllreduce(F);
 }
