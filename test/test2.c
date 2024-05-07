@@ -40,13 +40,3 @@ int main(int argc, char **argv) {
     }
     return 0;
 }
-
-// To compile:
-// clang -O1 -Xclang -disable-llvm-passes -S -emit-llvm -fno-discard-value-names ../test/test2.c -o ../test/test.ll $(mpicc --showme:compile)
-
-// To run pass, for legacy and new pass manager respectively:
-// opt -S --load ./MPIAttrs.so --bugpoint-enable-legacy-pm --mpiattrs ../test/test2.ll
-// opt -S -load-pass-plugin=./MPIAttrs.so -passes=mpiattrs ../test/test2.ll
-
-// All in one:
-// clang -fpass-plugin=./MPIAttrs.so -S -O3 ../test/test2.c -o ../test/test2_pass.s $(mpicc --showme:compile)

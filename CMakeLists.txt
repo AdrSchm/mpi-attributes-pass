@@ -27,10 +27,3 @@ add_llvm_pass_plugin(MPIAttrs
   PLUGIN_TOOL
   opt
 )
-
-if (DEFINED "USE_OPENMPI")
-  add_compile_definitions(USE_OPENMPI)
-  find_package(MPI)
-  add_definitions(-DOMPI_SKIP_MPICXX)
-  include_directories(SYSTEM ${MPI_INCLUDE_PATH})
-endif()

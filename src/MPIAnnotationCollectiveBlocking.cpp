@@ -1,13 +1,5 @@
 #include "MPIAnnotationFunctions.hpp"
 
-// we don't actually need any MPI functions, only the macro that defines MPI_IN_PLACE
-#ifdef USE_OPENMPI
-#include <mpi.h>
-#ifndef OPEN_MPI
-#error "Building for OpenMPI without OpenMPI header"
-#endif
-#endif
-
 #include "llvm/IR/Argument.h"
 #include "llvm/IR/Attributes.h"
 #include "llvm/IR/Constants.h"
@@ -143,63 +135,16 @@ void annotateMPIAlltoallv(llvm::Function *F) {
     F->setDoesNotFreeMemory();
 
     // send buffer
+    F->addParamAttr(0, ReadOnly);
     F->addParamAttr(0, NoCapture);
 
     // send count array
+    F->addParamAttr(1, ReadOnly);
     F->addParamAttr(1, NoCapture);
 
     // send displacements array
-    F->addParamAttr(2, NoCapture);
-
-// As of 3/7/24 this works, though it is possible that it changes in the future
-#ifdef USE_OPENMPI
-    // get all function calls
-    for (auto user : F->users()) {
-        // just to make sure
-        if (auto *call = llvm::dyn_cast<llvm::CallBase>(user)) {
-            bool failed = false;
-            // get send buffer argument
-            auto sendBuf = call->arg_begin()->get();
-            // make sure that we have MPI_IN_PLACE
-            if (auto constExpr = llvm::dyn_cast<llvm::ConstantExpr>(sendBuf);
-                constExpr && constExpr->isCast()) {
-                if (auto asInstr =
-                        llvm::dyn_cast<llvm::IntToPtrInst>(constExpr->getAsInstruction())) {
-                    auto val = asInstr->getOperand(0);
-                    if (auto intConst = llvm::dyn_cast<llvm::ConstantInt>(val)) {
-                        if (intConst->getValue() == (uint64_t)MPI_IN_PLACE) {
-                            call->addParamAttr(0, ReadNone);
-                            call->addParamAttr(1, ReadNone);
-                            call->addParamAttr(2, ReadNone);
-                        } else {
-                            // Some other constant than MPI_IN_PLACE
-                            failed = true;
-                        }
-                    } else {
-                        // Cast is not done on a constant integer, but e.g. on a variable
-                        failed = true;
-                    }
-                } else {
-                    // Constant expression is not a ptr-to-int cast
-                    failed = true;
-                }
-            } else {
-                // It is not a constant expression
-                failed = true;
-            }
-            // This call doesn't use MPI_IN_PLACE
-            if (failed) {
-                call->addParamAttr(0, ReadOnly);
-                call->addParamAttr(1, ReadOnly);
-                call->addParamAttr(2, ReadOnly);
-            }
-        }
-    }
-#else
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(1, ReadOnly);
     F->addParamAttr(2, ReadOnly);
-#endif
+    F->addParamAttr(2, NoCapture);
 
     // receive buffer
     // If we could be sure that the call is not happening "in place" we could mark this as
@@ -220,69 +165,20 @@ void annotateMPIAlltoallw(llvm::Function *F) {
     F->setDoesNotFreeMemory();
 
     // send buffer
+    F->addParamAttr(0, ReadOnly);
     F->addParamAttr(0, NoCapture);
 
     // send count array
+    F->addParamAttr(1, ReadOnly);
     F->addParamAttr(1, NoCapture);
 
     // send displacements array
+    F->addParamAttr(2, ReadOnly);
     F->addParamAttr(2, NoCapture);
 
     // send data types array
-    F->addParamAttr(3, NoCapture);
-
-// As of 3/7/24 this works, though it is possible that it changes in the future
-#ifdef USE_OPENMPI
-    // get all function calls
-    for (auto user : F->users()) {
-        // just to make sure
-        if (auto *call = llvm::dyn_cast<llvm::CallBase>(user)) {
-            bool failed = false;
-            // get send buffer argument
-            auto sendBuf = call->arg_begin()->get();
-            // make sure that we have MPI_IN_PLACE
-            if (auto constExpr = llvm::dyn_cast<llvm::ConstantExpr>(sendBuf);
-                constExpr && constExpr->isCast()) {
-                if (auto asInstr =
-                        llvm::dyn_cast<llvm::IntToPtrInst>(constExpr->getAsInstruction())) {
-                    auto val = asInstr->getOperand(0);
-                    if (auto intConst = llvm::dyn_cast<llvm::ConstantInt>(val)) {
-                        if (intConst->getValue() == (uint64_t)MPI_IN_PLACE) {
-                            call->addParamAttr(0, ReadNone);
-                            call->addParamAttr(1, ReadNone);
-                            call->addParamAttr(2, ReadNone);
-                            call->addParamAttr(3, ReadNone);
-                        } else {
-                            // Some other constant than MPI_IN_PLACE
-                            failed = true;
-                        }
-                    } else {
-                        // Cast is not done on a constant integer, but e.g. on a variable
-                        failed = true;
-                    }
-                } else {
-                    // Constant expression is not a ptr-to-int cast
-                    failed = true;
-                }
-            } else {
-                // It is not a constant expression
-                failed = true;
-            }
-            // This call doesn't use MPI_IN_PLACE
-            if (failed) {
-                call->addParamAttr(0, ReadOnly);
-                call->addParamAttr(1, ReadOnly);
-                call->addParamAttr(2, ReadOnly);
-                call->addParamAttr(3, ReadOnly);
-            }
-        }
-    }
-#else
-    F->addParamAttr(0, ReadOnly);
-    F->addParamAttr(1, ReadOnly);
-    F->addParamAttr(2, ReadOnly);
     F->addParamAttr(3, ReadOnly);
-#endif
+    F->addParamAttr(3, NoCapture);
 
     // receive buffer
     // If we could be sure that the call is not happening "in place" we could mark this as

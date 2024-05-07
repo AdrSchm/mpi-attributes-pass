@@ -15,6 +15,8 @@
    accordingly
 */
 bool runMPIAttributesPass(llvm::Module &M) {
+    llvm::outs() << "Starting annotating MPI functions...";
+
     annotateMPISetupTeardown(M);
     annotateMPICommunicationControl(M);
     annotateMPIPointToPointBlocking(M);
@@ -23,6 +25,8 @@ bool runMPIAttributesPass(llvm::Module &M) {
     annotateMPICollectiveBlocking(M);
     annotateMPICollectiveNonblocking(M);
     annotateMPICollectivePersistent(M);
+
+    llvm::outs() << "Finished annotating MPI functions!\n";
 
     // we potentially did modify the module
     return true;

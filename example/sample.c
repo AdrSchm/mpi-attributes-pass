@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #define ARRAY_SIZE 16
-#define ITER_TO_PRINT 1000
+#define ITER_TO_PRINT 1000000
 int main(int argc, char **argv) {
     int rank;
     int size;
@@ -20,14 +20,14 @@ int main(int argc, char **argv) {
         printf("Started %d processes\n", size);
     }
 
-    int num_iters = 1000000;
+    int num_iters = 1000000000;
 
     double array[ARRAY_SIZE] = {0};
 
     starttime = MPI_Wtime();
     for (int n = 0; n < num_iters; ++n) {
         for (int i = 0; i < ARRAY_SIZE; ++i) {
-            array[i] = array[i] + (n * rank);
+            array[i] = array[i] + (n * 42.1337);
         }
         if (n % ITER_TO_PRINT == 0 && rank == 0) {
             printf("Iter %d : %f\n", n, array[0]);
