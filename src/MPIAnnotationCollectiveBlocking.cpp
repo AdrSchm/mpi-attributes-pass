@@ -39,8 +39,8 @@ void annotateMPIGather(llvm::Function *F) {
     // receive buffer
     // We could mark this as ReadNone if this is not called in the root process, but this requires
     // runtime information.
-    // If we could be sure that the call is not happening "in place" we could mark this as
-    // WriteOnly, but this requires runtime information.
+    // Even if we have an "in place" operation the value is not read, it is just not written.
+    F->addParamAttr(3, WriteOnly);
     F->addParamAttr(3, NoCapture);
 }
 
