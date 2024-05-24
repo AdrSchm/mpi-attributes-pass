@@ -23,6 +23,7 @@ add_llvm_pass_plugin(MPIAttrs
   ./src/MPIAnnotationCollectiveBlocking.cpp
   ./src/MPIAnnotationCollectiveNonblocking.cpp
   ./src/MPIAnnotationCollectivePersistent.cpp
+  ./src/Bookkeeper.cpp
 
   PLUGIN_TOOL
   opt

@@ -4,11 +4,10 @@ pluginLib=$1
 targetCode=$2
 flags=${@:3}
 
+echo "Compiling without annotations..."
+clang $targetCode.c -o ${targetCode}_noPass.s -S $(mpicc --showme:compile) $flags
+echo "...finished!"
 
-echo -e "\nTime without pass:"
-time clang $targetCode.c -o ${targetCode}_noPass.s -S $(mpicc --showme:compile) $flags
-
-echo -e "\n\nTime with pass:"
-time clang $targetCode.c -o ${targetCode}_pass.s -S $(mpicc --showme:compile) $flags -fpass-plugin=$pluginLib
-
-echo ""
+echo "Compiling with annotations..."
+clang $targetCode.c -o ${targetCode}_pass.s -S $(mpicc --showme:compile) -fplugin=$pluginLib -fpass-plugin=$pluginLib $flags
+echo "...finished!"

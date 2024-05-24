@@ -24,6 +24,15 @@ Example usage of the flag:
 
     $ clang prog.c -fpass-plugin=/path/to/pass
 
+The pass provides a command line argument to additionally print a report of the performed annotations.
+It includes the total amount of MPI function declarations, the total amount of calls to MPI functions, the total amount of annotated MPI function declarations, the total amount of calls to annotated MPI functions, as well as an overview on a per-function basis, how often they are called.
+
+Example usage of the pass, including printing a report:
+
+    $ clang prog.c -fplugin=/path/to/pass -fpass-plugin=/path/to/pass -mllvm -print-annotation-report
+
+Beware that the report includes all annotations and function calls, even those that are removed in later optimizations.
+
 ## Other repository contents
 
 `test` contains programs to showcase possible optimizations in the generated assembly.
