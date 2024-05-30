@@ -9,7 +9,10 @@
 class Bookkeeper {
   public:
     void annotateModule(const llvm::Module &M);
-    void annotateFunction(llvm::Function *F);
+    inline void annotateFunction(llvm::Function *F) {
+        annotatedCalls += F->getNumUses();
+        isAnnotated[F] = true;
+    }
     void report();
 
   private:

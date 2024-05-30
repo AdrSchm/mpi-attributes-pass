@@ -33,7 +33,17 @@ Example usage of the pass, including printing a report:
 
 Beware that the report includes all annotations and function calls, even those that are removed in later optimizations.
 
-## Other repository contents
+## Extending the Pass
+
+To add attributes to additional functions it is possible to extend the pass.
+The following steps are necessary:
+
+1. Add a function with return type `void` and a single parameter of type `llvm::Function*`, that performs the annotation.
+2. Make sure that the function declaration is accessible from the code in `src/MPIAttributesPass.cpp`.
+3. Extend the list in `src/Attributes.def` with the name of the function-to-annotate and the name of the added annotation function.
+4. Recompile the pass.
+
+## Other Repository Contents
 
 `test` contains programs to showcase possible optimizations in the generated assembly.
 

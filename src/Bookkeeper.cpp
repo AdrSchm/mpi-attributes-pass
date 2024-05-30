@@ -17,11 +17,6 @@ void Bookkeeper::annotateModule(const llvm::Module &M) {
     }
 }
 
-void Bookkeeper::annotateFunction(llvm::Function *F) {
-    annotatedCalls += F->getNumUses();
-    isAnnotated[F] = true;
-}
-
 void Bookkeeper::report() {
     int amountAnnotated = isAnnotated.size();
     llvm::outs() << "Annotation report:\n";
