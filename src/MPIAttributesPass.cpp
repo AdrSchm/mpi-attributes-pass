@@ -25,7 +25,7 @@ typedef void (*annotationFunct_t)(llvm::Function *);
 std::unordered_map<std::string, annotationFunct_t> functionMap = {
 #ifndef X
 #define X(NAME, FUNC) \
-    { #NAME, FUNC }
+    { #NAME, FUNC },
 #include "Annotations.def"
 #undef X
 #else
@@ -61,7 +61,7 @@ bool runMPIAttributesPass(llvm::Module &M) {
                 during later optimizations. All code included from header files
                 is also counted. When using e.g. OpenMPI that means the C++
                 bindings and their use of MPI functions in headers may also be
-                also reported, even though they are not part of the users's code
+                reported, even though they are not part of the users's code
     */
     if (printReport) {
         bookkeeper.report();
